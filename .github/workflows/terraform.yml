@@ -74,10 +74,11 @@ jobs:
     steps:
       - name: Create temporary SSH key file
         run: |
+          ls -a ~/
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ls -a ~/
+          
           
       - name: Upload EC2 Private Key
         uses: actions/upload-artifact@v3

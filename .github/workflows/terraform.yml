@@ -74,16 +74,16 @@ jobs:
           $HasDiff = $SourceDiff.Length -gt 0
 
           # Set the output named "docs_changed"
-          echo "{docs_changed}=$HasDiff" >> $GITHUB_OUTPUT
+          echo "$HasDiff" >> $GITHUB_OUTPUT
 
           echo "$diff"
           echo "$SourceDiff"
-          echo "$docs_changed"
+          #echo "$docs_changed"
           echo "$HasDiff"
 
       - shell: pwsh
         # steps.<step_id>.outputs.<output name>
-        run: echo "${{steps.check_file_changed.outputs.docs_changed}}"
+        run: echo "${{steps.check_file_changed.outputs.HasDiff}}"
         
           
 
@@ -91,7 +91,7 @@ jobs:
     # Run the step only with "docs_changed" equals "True"
       - shell: pwsh
         # steps.<step_id>.outputs.<output name>
-        if: steps.check_file_changed.outputs.docs_changed == 'True'
+        if: steps.check_file_changed.outputs.HasDiff == 'True'
         run: echo "Updated"
 
       - name: "Configure AWS Credentials"

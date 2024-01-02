@@ -81,7 +81,7 @@ jobs:
 
       - shell: pwsh
         # steps.<step_id>.outputs.<output name>
-        run: echo "${steps.check_file_changed.outputs.docs_changed}"
+        run: echo "${{steps.check_file_changed.outputs.docs_changed}}"
         
           
 

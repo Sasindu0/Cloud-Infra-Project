@@ -1,10 +1,10 @@
 terraform {
 
   backend "s3" {
-    bucket         = "cloud-project-react-bkt"
-    key            = "tfstate-key/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
+    bucket  = "cloud-project-react-bkt"
+    key     = "tfstate-key/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
   }
 
   required_version = ">=0.13.0"
@@ -76,51 +76,51 @@ resource "aws_key_pair" "Flask_Web_Server_Keys" {
 }
 
 resource "local_file" "flask_private_key" {
-  content = tls_private_key.rsa_4096.private_key_pem
+  content  = tls_private_key.rsa_4096.private_key_pem
   filename = "Flask_Web_Server_Keys.pem"
 }
 
 resource "aws_security_group" "allow_traffic" {
-    name        = "allow_traffic"
-    description = "Allow SSH, HTTP, and HTTPS traffic"
+  name        = "allow_traffic"
+  description = "Allow SSH, HTTP, and HTTPS traffic"
 
-    ingress {
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    ingress {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    ingress {
-        from_port   = 443
-        to_port     = 443
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_instance" "Flask_Web_Server" {
-    ami           = "ami-0c7217cdde317cfec"  # Ubuntu AMI
-    instance_type = "t2.micro"
-    vpc_security_group_ids = [aws_security_group.allow_traffic.id]
-    key_name = aws_key_pair.Flask_Web_Server_Keys.key_name
+  ami                    = "ami-0c7217cdde317cfec" # Ubuntu AMI
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.allow_traffic.id]
+  key_name               = aws_key_pair.Flask_Web_Server_Keys.key_name
 
-    tags = {
-      name = "Flask-Web-Server"}
+  tags = {
+  name = "Flask-Web-Server" }
 }
 
 ################ Cloud-Front Configurations #######################
@@ -131,8 +131,8 @@ resource "aws_cloudfront_origin_access_identity" "my_origin_access_identity" {
 
 resource "aws_cloudfront_distribution" "my_distribution" {
 
-  depends_on = [ 
-        aws_s3_bucket.reactapp_bucket]  
+  depends_on = [
+  aws_s3_bucket.reactapp_bucket]
 
   origin {
     domain_name = aws_s3_bucket.reactapp_bucket.bucket_regional_domain_name
@@ -173,7 +173,7 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
     target_origin_id = "reactapp-s3-origin"
     cached_methods   = ["GET", "HEAD"]
-    compress = true
+    compress         = true
 
     forwarded_values {
       query_string = false
@@ -190,11 +190,11 @@ resource "aws_cloudfront_distribution" "my_distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/api/*"  # Example path pattern for EC2 origin
+    path_pattern     = "/api/*" # Example path pattern for EC2 origin
     allowed_methods  = ["GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "flask-web-server-origin"
-    compress = true
+    compress         = true
 
     forwarded_values {
       query_string = false
@@ -212,9 +212,9 @@ resource "aws_cloudfront_distribution" "my_distribution" {
 
   custom_error_response {
     error_caching_min_ttl = 0
-    error_code = 404
-    response_code = 200
-    response_page_path = "/index.html"
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
   }
 }
 

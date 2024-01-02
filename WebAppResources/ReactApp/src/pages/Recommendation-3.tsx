@@ -10,8 +10,6 @@ import "./Recommendation-3.css";
 import "./general.css";
 import RoundedProgressBar from "../Components/ProgressBar";
 
-//fsdfdsffd
-
 const baseUrl: string = "https://d236qntmmi6g9k.cloudfront.net";
 
 type Image = {

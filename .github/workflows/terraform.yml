@@ -62,28 +62,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - shell: pwsh
-      # Give an id to the step, so we can reference it later
-        id: check_file_changed
-        run: |
-          # Diff HEAD with the previous commit
-          $diff = git diff --name-only HEAD^ HEAD
-
-          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          $SourceDiff = $diff | Where-Object { $_ -match '^WebAppResources/' }
-          $HasDiff = $SourceDiff.Length -gt 0
-
-          # Set the output named "docs_changed"
-          echo "docs_changed=$HasDiff" >> $env:GITHUB_OUTPUT
-
-
-
-    # Run the step only with "docs_changed" equals "True"
-      - name: check if
-        # steps.<step_id>.outputs.<output name>
-        if: steps.check_file_changed.outputs.docs_changed == 'True'
-        run: echo "Updated"
-
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -91,14 +69,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - shell: pwsh
+        name: Check File Changes 
+        id: check_file_changed
+        run: |
+          $diff = git diff --name-only HEAD^ HEAD
+          $SourceDiff = $diff | Where-Object { $_ -match '^WebAppResources/ReactApp/dist/' }
+          $HasDiff = $SourceDiff.Length -gt 0
+          echo "docs_changed=$HasDiff" >> $env:GITHUB_OUTPUT
+
       - name: Install AWS CLI
         run: |
-          ls
+          sudo apt-get update
+          sudo apt-get install awscli
 
       - name: Update S3 Bucket
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: steps.check_file_changed.outputs.docs_changed == 'True'
         run: |
-          ls
+          aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/ --delete --exclude "tfstate-key/*"
+          aws cloudfront create-invalidation --distribution-id '${{ secrets.AWS_CLOUDFRONT_ID }}' --paths '/*'
 
   upload-key:
     name: "Upload EC2 Private Key"

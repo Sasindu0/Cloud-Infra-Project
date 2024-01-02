@@ -74,8 +74,9 @@ jobs:
           ls WebAppResources/ReactApp/dist/
 
       - name: Update S3 Bucket
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000') || contains(github.event.commits.added, 'WebAppResources/ReactApp/dist/') || contains(github.event.commits.modified, 'WebAppResources/ReactApp/dist/')
         run: |
+          aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
           aws cloudfront create-invalidation --distribution-id '${{ secrets.AWS_CLOUDFRONT_ID }}' --paths '/*'
 
   upload-key:
@@ -104,16 +105,26 @@ jobs:
     needs: [upload-key]
 
     steps:
-      - name: Install SSH Client
-        run: |
-          sudo apt-get update
-          sudo apt-get install openssh-client
+      - name: "Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: "Checkout"
+        uses: actions/checkout@v2
 
       - name: Download SSH Key
         uses: actions/download-artifact@v3
         with:
           name: ec2-private-key
           path: ~/.ssh/id_rsa
+
+      - name: Install SSH Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install openssh-client
 
       - name: Update EC2 Files
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000') || contains(github.event.commits.added, 'WebAppResources/WebServer/Server.py') || contains(github.event.commits.modified, 'WebAppResources/WebServer/Server.py')

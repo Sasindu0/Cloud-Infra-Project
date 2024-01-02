@@ -62,7 +62,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Difference
+      - shell: pwsh
       # Give an id to the step, so we can reference it later
         id: check_file_changed
         run: |

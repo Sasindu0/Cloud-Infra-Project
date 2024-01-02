@@ -74,7 +74,7 @@ jobs:
           ls WebAppResources/ReactApp/dist/
 
       - name: Update S3 Bucket
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000') || contains(github.event.commits.added, 'WebAppResources/ReactApp/dist/') || contains(github.event.commits.modified, 'WebAppResources/ReactApp/dist/')
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000') || contains(github.event.commits.*.added, 'WebAppResources/ReactApp/dist/') || contains(github.event.commits.*.modified, 'WebAppResources/ReactApp/dist/')
         run: |
           aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
           aws cloudfront create-invalidation --distribution-id '${{ secrets.AWS_CLOUDFRONT_ID }}' --paths '/*'

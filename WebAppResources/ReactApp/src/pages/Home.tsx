@@ -42,7 +42,7 @@ function Home() {
     },
     {
       text: "Text Here",
-      url: "https://images.pexels.com/photos/12162438/pexels-photo-12162438.png?auto=compress&cs=tinysrgb&w=600",
+      url: "https://i.ibb.co/LCHmNf2/Auction-2.jpg",
       imgText: "Image Text",
     },
     {

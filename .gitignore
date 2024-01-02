@@ -4,6 +4,6 @@
 errored.tfstate
 terraform.tfstate
 terraform.tfstate.backup
-!Flask_Web_Server_Keys.pem
+Flask_Web_Server_Keys.pem
 **.amazonaws.com
 **WebServer.zip

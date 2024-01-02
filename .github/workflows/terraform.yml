@@ -90,6 +90,18 @@ jobs:
         # steps.<step_id>.outputs.<output name>
         run: |
           echo "test: ${{ steps.check_file_changed.outputs.docs_changed }}"
+
+
+      - id: step1
+        run: echo "name=hello" >> $GITHUB_OUTPUT
+
+      - id: step2
+        run: echo "name=test::world" >> $GITHUB_OUTPUT
+
+      - name: Display
+        run: |
+          echo "Step 1 test: ${{ steps.step1.outputs.test }}"
+          echo "Step 2 test: ${{ steps.step1.outputs.test }}"
         
           
 

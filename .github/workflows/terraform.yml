@@ -79,6 +79,12 @@ jobs:
           echo "$diff"
           echo "$SourceDiff"
 
+      - shell: pwsh
+        # steps.<step_id>.outputs.<output name>
+        run: steps.check_file_changed.outputs.docs_changed
+        
+          
+
 
     # Run the step only with "docs_changed" equals "True"
       - shell: pwsh

@@ -59,6 +59,31 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - shell: pwsh
+      # Give an id to the step, so we can reference it later
+        id: check_file_changed
+        run: |
+          # Diff HEAD with the previous commit
+          $diff = git diff --name-only HEAD^ HEAD
+
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          $SourceDiff = $diff | Where-Object { $_ -match '^WebAppResources/' -or $_ -match '.yml$' }
+          $HasDiff = $SourceDiff.Length -gt 0
+
+          # Set the output named "docs_changed"
+          Write-Host "::set-output name=docs_changed::$HasDiff"
+
+          echo "$diff"
+
+
+    # Run the step only with "docs_changed" equals "True"
+      - shell: pwsh
+        # steps.<step_id>.outputs.<output name>
+        if: steps.check_file_changed.outputs.docs_changed == 'True'
+        run: echo publish docs
 
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v1
@@ -69,15 +94,12 @@ jobs:
 
       - name: Install AWS CLI
         run: |
-          sudo apt-get update
-          sudo apt-get install awscli
-          ls WebAppResources/ReactApp/dist/
+          ls
 
       - name: Update S3 Bucket
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/ --delete --exclude "tfstate-key/*"
-          aws cloudfront create-invalidation --distribution-id '${{ secrets.AWS_CLOUDFRONT_ID }}' --paths '/*'
+          ls
 
   upload-key:
     name: "Upload EC2 Private Key"

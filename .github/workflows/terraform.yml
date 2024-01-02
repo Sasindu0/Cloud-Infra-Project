@@ -62,7 +62,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - shell: pwsh
+      - name: Difference
       # Give an id to the step, so we can reference it later
         id: check_file_changed
         run: |
@@ -81,15 +81,16 @@ jobs:
           echo "$docs_changed"
           echo "$HasDiff"
 
-      - name: pwsh32
+      - name: test echo
         # steps.<step_id>.outputs.<output name>
-        run: echo "${{steps.check_file_changed.outputs.docs_changed}}"
+        run: |
+          echo "test: ${{steps.check_file_changed.outputs.docs_changed}}"
         
           
 
 
     # Run the step only with "docs_changed" equals "True"
-      - shell: pwsh
+      - name: check if
         # steps.<step_id>.outputs.<output name>
         if: steps.check_file_changed.outputs.docs_changed == 'True'
         run: echo "Updated"

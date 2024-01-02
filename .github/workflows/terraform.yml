@@ -70,20 +70,21 @@ jobs:
           $diff = git diff --name-only HEAD^ HEAD
 
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          $SourceDiff = $diff | Where-Object { $_ -match '^WebAppResources/' -or $_ -match '.yml$' }
+          $SourceDiff = $diff | Where-Object { $_ -match '^WebAppResources/' }
           $HasDiff = $SourceDiff.Length -gt 0
 
           # Set the output named "docs_changed"
-          Write-Host "::set-output name=docs_changed::$HasDiff"
+          Write-Host "{docs_changed}={$HasDiff}" >> $GITHUB_OUTPUT
 
           echo "$diff"
+          echo "$SourceDiff"
 
 
     # Run the step only with "docs_changed" equals "True"
       - shell: pwsh
         # steps.<step_id>.outputs.<output name>
         if: steps.check_file_changed.outputs.docs_changed == 'True'
-        run: echo publish docs
+        run: echo "Updated"
 
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v1

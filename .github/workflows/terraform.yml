@@ -93,15 +93,14 @@ jobs:
 
 
       - id: step1
-        run: echo "name=hello" >> $GITHUB_OUTPUT
+        run: echo "name=hello" >> $GITHUB_ENV
 
-      - id: step2
-        run: echo "name=test::world" >> $GITHUB_OUTPUT
+      
 
       - name: Display
         run: |
-          echo "Step 1 test: ${{ steps.step1.outputs.test }}"
-          echo "Step 2 test: ${{ steps.step1.outputs.test }}"
+          echo "Step 1 test: ${{ env.name }}"
+          
         
           
 

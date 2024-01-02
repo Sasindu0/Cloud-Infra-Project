@@ -129,6 +129,11 @@ resource "aws_cloudfront_origin_access_identity" "my_origin_access_identity" {
   comment = "origin access identity for the React App"
 }
 
+data "aws_cloudfront_cache_policy" "CachingDisabled" {
+  name = "Managed-CachingDisabled"
+  
+}
+
 resource "aws_cloudfront_distribution" "my_distribution" {
 
   depends_on = [
@@ -174,19 +179,20 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     target_origin_id = "reactapp-s3-origin"
     cached_methods   = ["GET", "HEAD"]
     compress         = true
+    cache_policy_id = data.aws_cloudfront_cache_policy.CachingDisabled.id
 
-    forwarded_values {
+    /* forwarded_values {
       query_string = false
 
       cookies {
         forward = "none"
       }
-    }
+    } */
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
+    /* min_ttl                = 0
     default_ttl            = 0
-    max_ttl                = 0
+    max_ttl                = 0 */
   }
 
   ordered_cache_behavior {
@@ -195,19 +201,20 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "flask-web-server-origin"
     compress         = true
+    cache_policy_id = data.aws_cloudfront_cache_policy.CachingDisabled.id
 
-    forwarded_values {
+    /* forwarded_values {
       query_string = false
 
       cookies {
         forward = "none"
       }
-    }
+    } */
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
+    /* min_ttl                = 0
     default_ttl            = 0
-    max_ttl                = 0
+    max_ttl                = 0 */
   }
 
   custom_error_response {

@@ -84,7 +84,7 @@ jobs:
       - name: test echo
         # steps.<step_id>.outputs.<output name>
         run: |
-          echo "test: ${{steps.check_file_changed.outputs.docs_changed}}"
+          echo "test: ${{ steps.check_file_changed.outputs.docs_changed }}"
         
           
 

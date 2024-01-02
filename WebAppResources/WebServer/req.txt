@@ -1,0 +1,63 @@
+
+#!/bin/bash -xe
+
+apt-get update
+apt-get install -y mysql-server python3-venv authbind
+touch /etc/authbind/byport/80
+chmod 500 /etc/authbind/byport/80
+chown ubuntu /etc/authbind/byport/80
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '123';"
+mysql -u root -p 123 "SET GLOBAL local_infile = ON;"
+mysql -u root -p 123 "CREATE DATABASE cricket_db;"
+mysql -u root -p 123 "USE cricket_db;"
+mysql -u root -p 123 "CREATE TABLE `player_data` (
+  `id` int NOT NULL,
+  `player_name` varchar(100) NOT NULL,
+  `team` varchar(100) NOT NULL,
+  `overall_innings` varchar(20) NOT NULL,
+  `overall_runs` varchar(20) NOT NULL,
+  `overall_notout` varchar(20) NOT NULL,
+  `balls` varchar(20) NOT NULL,
+  `centuries` varchar(20) NOT NULL,
+  `fifties` varchar(20) NOT NULL,
+  `thirties` varchar(20) NOT NULL,
+  `zeros` varchar(20) NOT NULL,
+  `overall_average` varchar(20) NOT NULL,
+  `strike_rate` varchar(20) NOT NULL,
+  `form_innings` varchar(20) NOT NULL,
+  `form_runs` varchar(20) NOT NULL,
+  `recent_not_outs` varchar(20) NOT NULL,
+  `recent_100s` varchar(20) NOT NULL,
+  `recent_50s` varchar(20) NOT NULL,
+  `recent_30s` varchar(20) NOT NULL,
+  `recent_zeros` varchar(20) NOT NULL,
+  `form_average` varchar(20) NOT NULL,
+  `home_innings` varchar(20) NOT NULL,
+  `home_runs` varchar(20) NOT NULL,
+  `home_not_out_count` varchar(20) NOT NULL,
+  `home_100s` varchar(20) NOT NULL,
+  `home_50s` varchar(20) NOT NULL,
+  `home_30s` varchar(20) NOT NULL,
+  `home_zeros` varchar(20) NOT NULL,
+  `home_average` varchar(20) NOT NULL,
+  `away_innings` varchar(20) NOT NULL,
+  `away_runs` varchar(20) NOT NULL,
+  `away_not_out_count` varchar(20) NOT NULL,
+  `away_100s` varchar(20) NOT NULL,
+  `away_50s` varchar(20) NOT NULL,
+  `away_30s` varchar(20) NOT NULL,
+  `away_zeros` varchar(20) NOT NULL,
+  `away_average` varchar(20) NOT NULL,
+  `img_url` varchar(100) NOT NULL
+);"
+mysqlimport -u root -p123 --local --fields-terminated-by=',' --lines-terminated-by='\n' cricket_db player_data.csv
+mv gunicorn.service /etc/systemd/system/
+mkdir Cloud-Web-Server
+mv WebServer.zip Cloud-Web-Server/
+unzip Cloud-Web-Server/WebServer.zip Cloud-Web-Server/
+python3 -m venv Cloud-Web-Server/venv
+source Cloud-Web-Server/venv/bin/activate
+pip install -r requirements.txt
+systemctl daemon-reload
+systemctl start gunicorn
+systemctl enable gunicorn

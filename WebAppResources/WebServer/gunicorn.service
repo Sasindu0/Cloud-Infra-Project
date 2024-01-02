@@ -1,0 +1,10 @@
+[Unit]
+Description=Gunicorn for Flask Web Server
+After=network.target
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Cloud-Web-Server
+ExecStart=/usr/bin/authbind --deep /home/ubuntu/Cloud-Web-Server/venv/bin/gunicorn -b 0.0.0.0:80 Server:app
+[Install]
+WantedBy=multi-user.target

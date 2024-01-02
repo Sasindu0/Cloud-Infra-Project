@@ -1,0 +1,9 @@
+**/node_modules
+**/.terraform
+.terraform.lock.hcl
+errored.tfstate
+terraform.tfstate
+terraform.tfstate.backup
+Flask_Web_Server_Keys.pem
+**.amazonaws.com
+**WebServer.zip

@@ -78,6 +78,7 @@ jobs:
 
           echo "$diff"
           echo "$SourceDiff"
+          echo "$docs_changed"
 
       - shell: pwsh
         # steps.<step_id>.outputs.<output name>

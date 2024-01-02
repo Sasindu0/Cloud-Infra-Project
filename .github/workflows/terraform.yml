@@ -69,7 +69,6 @@ jobs:
       - name: Update S3 Bucket
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
           aws cloudfront create-invalidation --distribution-id '${{ secrets.AWS_CLOUDFRONT_ID }}' --paths '/*'
 
   upload-key:

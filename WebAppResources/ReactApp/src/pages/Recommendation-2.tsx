@@ -11,7 +11,7 @@ import {
 import "./Recommendation-2.css";
 import "./general.css";
 
-//asdftysdfdsf
+//asdftysdfdsfsdffd
 
 const baseUrl: string = "https://d236qntmmi6g9k.cloudfront.net";
 

@@ -77,8 +77,7 @@ jobs:
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ls
-          pwd
+          ls ~/WebAppResources/
           
       - name: Upload EC2 Private Key
         uses: actions/upload-artifact@v3
@@ -96,8 +95,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install openssh-client
-          ls
-          pwd
+          ls /WebAppResources/
 
       - name: Download SSH Key
         uses: actions/download-artifact@v3

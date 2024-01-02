@@ -76,33 +76,6 @@ jobs:
           # Set the output named "docs_changed"
           echo "docs_changed=$HasDiff" >> $env:GITHUB_OUTPUT
 
-          echo "$diff"
-          echo "$SourceDiff"
-          echo "$docs_changed"
-          echo "$HasDiff"
-
-      - name: test echo
-        # steps.<step_id>.outputs.<output name>
-        run: |
-          echo "test: ${{ steps.check_file_changed.outputs.docs_changed }}"
-
-      - shell: pwsh
-        # steps.<step_id>.outputs.<output name>
-        run: |
-          echo "test: ${{ steps.check_file_changed.outputs.docs_changed }}"
-
-
-      - id: step1
-        run: echo "name=hello" >> $GITHUB_ENV
-
-      
-
-      - name: Display
-        run: |
-          echo "Step 1 test: ${{ env.name }}"
-          
-        
-          
 
 
     # Run the step only with "docs_changed" equals "True"

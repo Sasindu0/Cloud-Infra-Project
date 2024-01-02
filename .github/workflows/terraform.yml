@@ -64,6 +64,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install awscli
+          ls WebAppResources/ReactApp/dist/
 
       - name: Update S3 Bucket
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'

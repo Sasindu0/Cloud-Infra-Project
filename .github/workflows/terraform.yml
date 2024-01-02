@@ -76,7 +76,8 @@ jobs:
         run: |
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ls ~/.ssh/
+          chmod 600 ~/.ssh/id_rsa
+          ls ~/
           
 
       - name: Upload EC2 Private Key

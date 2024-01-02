@@ -74,7 +74,7 @@ jobs:
     steps:
       - name: Create temporary SSH key file
         run: |
-          mkdir ~/.ssh/
+          ls ~/.ssh/
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa

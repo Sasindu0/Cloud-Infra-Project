@@ -100,14 +100,14 @@ jobs:
       - name: Create temporary SSH key file
         run: |
           mkdir ~/.ssh
-          echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa.pem
+          chmod 600 ~/.ssh/id_rsa.pem
           
       - name: Upload EC2 Private Key
         uses: actions/upload-artifact@v3
         with:
           name: ec2-private-key
-          path: ~/.ssh/id_rsa
+          path: ~/.ssh/id_rsa.pem
 
   ec2-update:
     name: "Update EC2 Instance"
@@ -131,7 +131,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ec2-private-key
-          path: ~/.ssh/id_rsa
+          path: ~/.ssh/id_rsa.pem
 
       - shell: pwsh
         name: Check File Changes 
@@ -150,6 +150,6 @@ jobs:
       - name: Update EC2 Files
         if: steps.check_file_changed.outputs.src_changed == 'True'
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo rsync -avz WebAppResources/WebServer/Server.py ${{ secrets.AWS_EC2_SERVER_DIR }}"
-          ssh -i ~/.ssh/id_rsa ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo systemctl restart gunicorn"
+          ssh -i ~/.ssh/id_rsa.pem ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo rsync -avz WebAppResources/WebServer/Server.py ${{ secrets.AWS_EC2_SERVER_DIR }}"
+          ssh -i ~/.ssh/id_rsa.pem ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo systemctl restart gunicorn"
 

@@ -32,6 +32,11 @@ jobs:
           echo "Listing files in $(pwd):"
           ls
 
+      - name: list files2
+        run: |
+          echo "Listing files in $(pwd):"
+          ls /WebAppResources/
+
       - name: "Terraform Init"
         run: terraform init
 
@@ -77,7 +82,7 @@ jobs:
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ls ~/WebAppResources/
+          ls /home/runner/work/Cloud-Infra-Project/Cloud-Infra-Project/WebAppResources/
           
       - name: Upload EC2 Private Key
         uses: actions/upload-artifact@v3

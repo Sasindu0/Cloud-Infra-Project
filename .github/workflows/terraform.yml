@@ -32,11 +32,6 @@ jobs:
           echo "Listing files in $(pwd):"
           ls
 
-      - name: list files2
-        run: |
-          echo "Listing files in $(pwd):"
-          ls WebAppResources/
-
       - name: "Terraform Init"
         run: terraform init
 
@@ -62,13 +57,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
       - name: Install AWS CLI
         run: |
           sudo apt-get update
           sudo apt-get install awscli
 
       - name: Update S3 Bucket
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000') || contains(github.event.commits.added, 'WebAppResources/ReactApp/dist/') || contains(github.event.commits.modified, 'WebAppResources/ReactApp/dist/')
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.before, '0000000000000000000000000000000000000000')
         run: |
           aws s3 sync WebAppResources/ReactApp/dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
 
@@ -77,6 +75,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
       - name: Create temporary SSH key file
         run: |
           mkdir ~/.ssh

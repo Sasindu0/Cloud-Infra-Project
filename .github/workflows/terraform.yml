@@ -101,7 +101,7 @@ jobs:
         run: |
           mkdir ~/.ssh
           echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/id_rsa.pem
-          chmod 600 ~/.ssh/id_rsa.pem
+          chmod 400 ~/.ssh/id_rsa.pem
           
       - name: Upload EC2 Private Key
         uses: actions/upload-artifact@v3

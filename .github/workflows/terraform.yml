@@ -148,10 +148,10 @@ jobs:
           sudo apt-get install openssh-client
 
       - name: Update EC2 Files
-
+        if: steps.check_file_changed.outputs.src_changed == 'True'
         run: |
           chmod 400 ~/.ssh/id_rsa.pem
           ssh-keyscan -H ec2-34-228-254-230.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-          scp -i ~/.ssh/id_rsa.pem WebAppResources/WebServer/test.md ${{ secrets.AWS_EC2_PUBLIC_DNS }}:${{ secrets.AWS_EC2_SERVER_DIR }}/
-          #ssh -i ~/.ssh/id_rsa.pem ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo systemctl restart gunicorn"
+          scp -i ~/.ssh/id_rsa.pem WebAppResources/WebServer/Server.py ${{ secrets.AWS_EC2_PUBLIC_DNS }}:${{ secrets.AWS_EC2_SERVER_DIR }}/
+          ssh -i ~/.ssh/id_rsa.pem ${{ secrets.AWS_EC2_PUBLIC_DNS }} "sudo systemctl restart gunicorn"
 

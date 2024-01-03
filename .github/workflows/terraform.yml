@@ -107,7 +107,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ec2-private-key
-          path: ~/.ssh/id_rsa.pem
+          path: ~/.ssh/
 
   ec2-update:
     name: "Update EC2 Instance"
@@ -131,7 +131,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ec2-private-key
-          path: ~/.ssh/id_rsa.pem
+          path: ~/.ssh/
 
       - shell: pwsh
         name: Check File Changes 
@@ -146,6 +146,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install openssh-client
+
+      - name: chech .ssh
+        run: |
+          ls ~/.ssh/id_rsa.pem
 
       - name: Update EC2 Files
 

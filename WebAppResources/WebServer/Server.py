@@ -5,7 +5,7 @@ import pandas as pd
 import pickle
 
 
-#Hello World 23
+#Server Updated!
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123@localhost:3306/cricket_db'

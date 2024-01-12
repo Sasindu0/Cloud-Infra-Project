@@ -134,6 +134,11 @@ data "aws_cloudfront_cache_policy" "CachingDisabled" {
   
 }
 
+data "aws_cloudfront_cache_policy" "CachingOptimized" {
+  name = "CachingOptimized"
+  
+}
+
 resource "aws_cloudfront_distribution" "my_distribution" {
 
   depends_on = [
@@ -179,7 +184,7 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     target_origin_id = "reactapp-s3-origin"
     cached_methods   = ["GET", "HEAD"]
     compress         = true
-    cache_policy_id = data.aws_cloudfront_cache_policy.CachingDisabled.id
+    cache_policy_id = data.aws_cloudfront_cache_policy.CachingOptimized.id
 
     /* forwarded_values {
       query_string = false
@@ -196,7 +201,7 @@ resource "aws_cloudfront_distribution" "my_distribution" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/api/*" # Example path pattern for EC2 origin
+    path_pattern     = "/api/*"
     allowed_methods  = ["GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "flask-web-server-origin"

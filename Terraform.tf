@@ -185,19 +185,7 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     cached_methods   = ["GET", "HEAD"]
     compress         = true
     cache_policy_id = data.aws_cloudfront_cache_policy.CachingOptimized.id
-
-    /* forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    } */
-
     viewer_protocol_policy = "redirect-to-https"
-    /* min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0 */
   }
 
   ordered_cache_behavior {
@@ -207,19 +195,7 @@ resource "aws_cloudfront_distribution" "my_distribution" {
     target_origin_id = "flask-web-server-origin"
     compress         = true
     cache_policy_id = data.aws_cloudfront_cache_policy.CachingDisabled.id
-
-    /* forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    } */
-
     viewer_protocol_policy = "redirect-to-https"
-    /* min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0 */
   }
 
   custom_error_response {
